@@ -23,6 +23,11 @@ jobs:
         with:
           node-version: '18.x' # Use 18.x for maximum compatibility with Vite/React
 
+      - name: Debug - Print current directory and list files
+        run: |
+          pwd
+          ls -alR
+
       - name: npm install, build, and test
         run: |
           npm install

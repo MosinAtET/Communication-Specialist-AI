@@ -1,3 +1,6 @@
+# To enable deployment, obtain your deployment token from the Azure Portal for your Static Web App and add it as a repository secret named AZURE_STATIC_WEB_APPS_API_TOKEN in GitHub.
+# See: https://docs.microsoft.com/en-us/azure/static-web-apps/deployment-token
+
 name: Azure Static Web Apps CI/CD
 
 on:
@@ -10,7 +13,7 @@ on:
 jobs:
   build_and_deploy_job:
     runs-on: ubuntu-latest
-    name: Build and Deploy Job
+    name: Build and Deploy Frontend
     steps:
       - uses: actions/checkout@v4
 
@@ -19,7 +22,7 @@ jobs:
         with:
           node-version: '18.x'
 
-      - name: Build frontend
+      - name: Install dependencies and build frontend
         run: |
           npm install
           npm run build

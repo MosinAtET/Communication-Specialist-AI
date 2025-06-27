@@ -1,23 +1,18 @@
-# To enable deployment, obtain your deployment token from the Azure Portal for your Static Web App and add it as a repository secret named AZURE_STATIC_WEB_APPS_API_TOKEN in GitHub.
-# See: https://docs.microsoft.com/en-us/azure/static-web-apps/deployment-token
-
-name: Azure Static Web Apps CI/CD
+name: Build and deploy Node.js app to Azure Web App
 
 on:
   push:
     branches:
       - master
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
+  workflow_dispatch:
 
 jobs:
-  build_and_deploy_job:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    name: Build and Deploy Frontend
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
@@ -28,13 +23,10 @@ jobs:
           npm run build
         working-directory: frontend
 
-      - name: Deploy to Azure Static Web Apps
-        id: swa-deploy
-        uses: Azure/static-web-apps-deploy@v1
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for GitHub integrations (i.e., PR comments)
-          action: 'upload'
-          app_location: "/frontend"
-          output_location: "dist"
-          skip_deploy_on_missing_secrets: true 
+          app-name: et-ci-dev-csai-ui
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: frontend/dist

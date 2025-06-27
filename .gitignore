@@ -122,4 +122,13 @@ celerybeat.pid
 # mypy
 .mypy_cache/
 .dmypy.json
-dmypy.json 
+dmypy.json
+
+# Un-ignore package.json and package-lock.json in frontend
+!frontend/package.json
+!frontend/package-lock.json
+
+# Un-ignore TypeScript config files in frontend
+!frontend/tsconfig.json
+!frontend/tsconfig.app.json
+!frontend/tsconfig.node.json 

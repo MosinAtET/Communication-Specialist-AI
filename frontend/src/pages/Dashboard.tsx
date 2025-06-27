@@ -13,21 +13,16 @@ import {
   Users,
   Bot,
   Clock,
-  CheckCircle,
-  AlertCircle,
-  Activity,
-  Twitter,
   Globe,
+  Save,
+  X,
+  Twitter,
   Edit,
   Trash2,
-  X,
-  Save,
+  AlertCircle,
+  Activity,
+  CheckCircle,
 } from "lucide-react";
-
-interface Stat {
-  label: string;
-  value: number;
-}
 
 interface ScheduledPost {
   post_id: string;

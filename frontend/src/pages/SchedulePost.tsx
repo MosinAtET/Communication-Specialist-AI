@@ -23,11 +23,23 @@ const platformOptions = [
 
 const MAX_PROMPT_LENGTH = 500;
 
+// Define a type for the result object
+interface SchedulePostResult {
+  success?: boolean;
+  immediate?: boolean;
+  message?: string;
+  event_matching?: {
+    matched_event_title?: string;
+    confidence?: number;
+    reasoning?: string;
+  };
+}
+
 const SchedulePost: React.FC = () => {
   const [prompt, setPrompt] = useState("");
   const [platforms, setPlatforms] = useState<string[]>(["devto"]);
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<SchedulePostResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: string } | null>(
     null
@@ -44,13 +56,7 @@ const SchedulePost: React.FC = () => {
       showToast("Post scheduled successfully", "success");
       setPrompt("");
     } catch (err) {
-      const errorMessage =
-        typeof err === "object" && err !== null
-          ? err.response?.data?.detail ||
-            err.message ||
-            "Failed to schedule post"
-          : "Failed to schedule post";
-      setError(errorMessage);
+      setError("Failed to schedule post");
       showToast("Failed to schedule post", "error");
     } finally {
       setLoading(false);
@@ -181,11 +187,15 @@ const SchedulePost: React.FC = () => {
                     📅 Matched Event:{" "}
                     {result.event_matching.matched_event_title}
                   </div>
-                  <div className="text-xs text-green-600">
-                    Confidence:{" "}
-                    {(result.event_matching.confidence * 100).toFixed(0)}% •{" "}
-                    {result.event_matching.reasoning}
-                  </div>
+                  {result.event_matching.confidence !== undefined && (
+                    <div className="text-xs text-green-600">
+                      Confidence:{" "}
+                      {((result.event_matching.confidence ?? 0) * 100).toFixed(
+                        0
+                      )}
+                      % • {result.event_matching.reasoning}
+                    </div>
+                  )}
                 </div>
               )}
               {result.immediate && (

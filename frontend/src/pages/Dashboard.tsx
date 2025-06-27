@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  schedulePost,
   getDashboardStats,
   getScheduledPosts,
   getPendingComments,
@@ -52,7 +51,6 @@ const Dashboard: React.FC = () => {
   const [stats, setStats] = useState<any>(null);
   const [scheduledPosts, setScheduledPosts] = useState<ScheduledPost[]>([]);
   const [pendingComments, setPendingComments] = useState<PendingComment[]>([]);
-  const [loadingStats, setLoadingStats] = useState(true);
   const [loadingPosts, setLoadingPosts] = useState(true);
   const [loadingComments, setLoadingComments] = useState(true);
   const [editingPost, setEditingPost] = useState<string | null>(null);
@@ -76,15 +74,12 @@ const Dashboard: React.FC = () => {
   }, []);
 
   const loadStats = async () => {
-    setLoadingStats(true);
     try {
       const data = await getDashboardStats();
       setStats(data);
     } catch {
       setStats(null);
       showToast("Error loading statistics", "error");
-    } finally {
-      setLoadingStats(false);
     }
   };
 
@@ -168,95 +163,6 @@ const Dashboard: React.FC = () => {
   // Helper to truncate text
   const truncate = (text: string, max: number) =>
     text.length > max ? text.slice(0, max) + "..." : text;
-
-  const formatDate = (dateString: string) => {
-    try {
-      return new Date(dateString).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    } catch {
-      return dateString;
-    }
-  };
-
-  const getPlatformIcon = (platform: string) => {
-    switch (platform.toLowerCase()) {
-      case "twitter":
-        return "🐦";
-      case "dev.to":
-        return "👩‍💻";
-      case "linkedin":
-        return "💼";
-      case "facebook":
-        return "📘";
-      default:
-        return "📱";
-    }
-  };
-
-  const getPlatformColor = (platform: string) => {
-    switch (platform.toLowerCase()) {
-      case "twitter":
-        return "bg-sky-100 text-sky-700 border-sky-200";
-      case "dev.to":
-        return "bg-purple-100 text-purple-700 border-purple-200";
-      case "linkedin":
-        return "bg-blue-100 text-blue-700 border-blue-200";
-      case "facebook":
-        return "bg-indigo-100 text-indigo-700 border-indigo-200";
-      default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
-    }
-  };
-
-  const LoadingSkeleton = ({ lines = 3 }: { lines?: number }) => (
-    <div className="animate-pulse">
-      {Array.from({ length: lines }).map((_, i) => (
-        <div key={i} className="mb-3 last:mb-0">
-          <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-          <div className="h-3 bg-gray-100 rounded w-1/2"></div>
-        </div>
-      ))}
-    </div>
-  );
-
-  const StatCard = ({
-    icon,
-    value,
-    label,
-    color,
-    loading,
-  }: {
-    icon: string;
-    value: number;
-    label: string;
-    color: string;
-    loading: boolean;
-  }) => (
-    <div
-      className={`${color} rounded-xl shadow-sm border border-white/50 p-6 backdrop-blur-sm transition-all duration-200 hover:shadow-md hover:scale-105`}
-    >
-      {loading ? (
-        <div className="animate-pulse">
-          <div className="h-8 bg-white/30 rounded w-16 mb-2"></div>
-          <div className="h-4 bg-white/20 rounded w-20"></div>
-        </div>
-      ) : (
-        <>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-2xl">{icon}</span>
-            <span className="text-3xl font-bold text-white drop-shadow-sm">
-              {value || 0}
-            </span>
-          </div>
-          <span className="text-white/90 text-sm font-medium">{label}</span>
-        </>
-      )}
-    </div>
-  );
 
   return (
     <div className="p-4 md:p-10">

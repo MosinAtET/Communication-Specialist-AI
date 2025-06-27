@@ -1,15 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import {
-  Home,
-  Calendar,
-  MessageSquare,
-  Settings,
-  BarChart3,
-  Users,
-  Bot,
-  Monitor,
-} from "lucide-react";
+import { Home, Calendar } from "lucide-react";
 
 interface LayoutProps {
   children: React.ReactNode;
